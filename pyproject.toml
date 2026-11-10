@@ -1,0 +1,9 @@
+[project]
+name = "de-hw4-zookeeper"
+version = "0.1.0"
+description = "ДЗ 4: ансамбль ZooKeeper и отказоустойчивый координатор расчёта пар навыков из ДЗ 3"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.35",
+    "kazoo>=2.10",
+]

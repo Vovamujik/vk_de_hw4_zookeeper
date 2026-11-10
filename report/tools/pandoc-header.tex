@@ -1,0 +1,6 @@
+% Переносы длинных строк в блоках кода и мелкий шрифт для журналов
+\usepackage{fvextra}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{breaklines,breakanywhere,fontsize=\small}
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,breakanywhere,commandchars=\\\{\},fontsize=\small}
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\small}

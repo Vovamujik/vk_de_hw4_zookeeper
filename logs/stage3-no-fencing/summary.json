@@ -1,0 +1,18 @@
+{
+  "run": "stage3-no-fencing",
+  "fencing": false,
+  "leader": "A",
+  "backup": "B",
+  "paused_at_checkpoint": 8,
+  "failover_s": 10.89,
+  "session_expiry_after_pause_s": 10.85,
+  "pause_s": 44.7,
+  "pointer_version": 2,
+  "pointer_by": "A",
+  "pointer_epoch": 1,
+  "epoch_version": 2,
+  "writes": 2,
+  "rejects": 0,
+  "matches_hw3": true,
+  "ok": true
+}

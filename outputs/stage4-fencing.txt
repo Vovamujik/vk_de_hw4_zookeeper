@@ -1,0 +1,28 @@
+===== logs/stage4-fencing/coordinator-{A,B}.log: смена лидера, чекпоинт, сверка с ДЗ 3, публикация
+12:49:08.102 [A pid 85314] INFO СТАЛ ЛИДЕРОМ: эпоха 1 (ждал очереди 0.0 с)
+12:49:08.177 [A pid 85314] INFO чекпоинта нет: считаю все 26 сплитов s3://hh-lake/raw/it_vacancies_2024.csv (847619384 байт)
+12:49:33.921 [B pid 85315] INFO СТАЛ ЛИДЕРОМ: эпоха 2 (ждал очереди 25.3 с)
+12:49:34.037 [B pid 85315] INFO продолжаю с чекпоинта: готово 8 из 26 сплитов, осталось 18
+12:50:06.366 [B pid 85315] INFO сверка с ДЗ 3 (hw3_reference/pairs.csv): СОВПАДАЕТ байт в байт — пар 7124, сумма 39256, отпечаток 1f165b4be04d5005
+12:50:06.413 [B pid 85315] INFO ЗАПИСАЛ РЕЗУЛЬТАТ: /hw4/stage4-fencing/result версия 1 (эпоха 2, проверка эпохи пройдена)
+12:50:07.672 [A pid 85314] WARNING связь с ZooKeeper прервана (SUSPENDED)
+12:50:07.676 [A pid 85314] WARNING сессия ZooKeeper истекла (LOST): её эфемерные узлы удалены сервером
+12:50:09.513 [A pid 85314] INFO сверка с ДЗ 3 (hw3_reference/pairs.csv): СОВПАДАЕТ байт в байт — пар 7124, сумма 39256, отпечаток 1f165b4be04d5005
+12:50:09.552 [A pid 85314] ERROR ПУБЛИКАЦИЯ ОТКЛОНЕНА: BadVersionError — моя эпоха 1 устарела, текущая эпоха 2 (лидер B); указатель /hw4/stage4-fencing/result не изменён
+
+===== указатель на результат и счётчик эпох в ZooKeeper
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 get -s /hw4/stage4-fencing/result
+{"result": "s3://hh-lake/results/hw4/stage4-fencing/pairs-epoch2-B.csv", "epoch": 2, "coordinator": "B", "pairs": 7124, "sum": 39256, "fingerprint": "1f165b4be04d5005", "written_at": "2026-11-10T12:50:06.387"}
+cZxid = 0x3000000f1
+ctime = Tue Nov 10 12:49:08 MSK 2026
+mZxid = 0x300000114
+mtime = Tue Nov 10 12:50:06 MSK 2026
+pZxid = 0x3000000f1
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 209
+numChildren = 0
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 get /hw4/stage4-fencing/epoch
+{"epoch": 2, "leader": "B", "since": "2026-11-10T12:49:33.907"}

@@ -1,0 +1,22 @@
+# Окружение и секреты
+.venv/
+.env
+__pycache__/
+.DS_Store
+.idea/
+
+# Скачанные архивы (Java 17 и ZooKeeper 3.9.6) — в git не храним, контрольные суммы в отчёте
+.downloads/
+
+# Три распакованные копии ZooKeeper: в git только конфигурации и myid
+zookeeper/zk*/*
+!zookeeper/zk*/conf/
+zookeeper/zk*/conf/*
+!zookeeper/zk*/conf/zoo.cfg
+!zookeeper/zk*/data/
+zookeeper/zk*/data/*
+!zookeeper/zk*/data/myid
+
+# Спилы map-тасков координатора и служебное состояние скриптов
+work/
+outputs/.stage2_stopped

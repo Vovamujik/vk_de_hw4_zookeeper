@@ -1,0 +1,119 @@
+
+===== 2026-11-10 12:39:41 Три сервера запущены: роли по zkServer.sh status
+$ cd zookeeper/zk1 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk1/bin/../conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Mode: follower
+
+$ cd zookeeper/zk2 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk2/bin/../conf/zoo.cfg
+Client port found: 2182. Client address: localhost. Client SSL: false.
+Mode: leader
+
+$ cd zookeeper/zk3 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk3/bin/../conf/zoo.cfg
+Client port found: 2183. Client address: localhost. Client SSL: false.
+Mode: follower
+
+
+===== 2026-11-10 12:39:51 Останавливаю текущего лидера — сервер 2
+$ cd zookeeper/zk2 && bin/zkServer.sh stop
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk2/bin/../conf/zoo.cfg
+Stopping zookeeper ... STOPPED
+
+
+===== 2026-11-10 12:39:56 Работают серверы: 1 3 
+$ cd zookeeper/zk1 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk1/bin/../conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Mode: follower
+
+$ cd zookeeper/zk3 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk3/bin/../conf/zoo.cfg
+Client port found: 2183. Client address: localhost. Client SSL: false.
+Mode: leader
+
+
+===== 2026-11-10 12:39:57 Кворум 2 из 3 есть: запись через один сервер, чтение через другой
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 create /stage2-check written-with-2-of-3-servers
+Connecting to 127.0.0.1:2181
+WATCHER::
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+Created /stage2-check
+$ zookeeper/zk3/bin/zkCli.sh -server 127.0.0.1:2183 get /stage2-check
+Connecting to 127.0.0.1:2183
+WATCHER::
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+written-with-2-of-3-servers
+
+===== 2026-11-10 12:40:01 Останавливаю текущего лидера — сервер 3
+$ cd zookeeper/zk3 && bin/zkServer.sh stop
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk3/bin/../conf/zoo.cfg
+Stopping zookeeper ... STOPPED
+
+
+===== 2026-11-10 12:40:06 Работают серверы: 1 
+$ cd zookeeper/zk1 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk1/bin/../conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Error contacting service. It is probably not running.
+
+
+===== 2026-11-10 12:40:07 Кворума нет (1 из 3): сервер не обслуживает клиентов
+$ echo srvr | nc 127.0.0.1 2181
+This ZooKeeper instance is not currently serving requests
+
+$ (zkCli с ожиданием подключения, предел 20 с)
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 -waitforconnection ls /
+zkCli не дождался подключения за 20 с (код 124)
+
+===== 2026-11-10 12:40:29 Запускаю остановленные серверы: 2 3 
+$ cd zookeeper/zk2 && bin/zkServer.sh start
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk2/bin/../conf/zoo.cfg
+Starting zookeeper ... STARTED
+
+$ cd zookeeper/zk3 && bin/zkServer.sh start
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk3/bin/../conf/zoo.cfg
+Starting zookeeper ... STARTED
+
+
+===== 2026-11-10 12:40:38 Снова три сервера
+$ cd zookeeper/zk1 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk1/bin/../conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Mode: leader
+
+$ cd zookeeper/zk2 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk2/bin/../conf/zoo.cfg
+Client port found: 2182. Client address: localhost. Client SSL: false.
+Mode: follower
+
+$ cd zookeeper/zk3 && bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk3/bin/../conf/zoo.cfg
+Client port found: 2183. Client address: localhost. Client SSL: false.
+Mode: follower
+
+
+===== 2026-11-10 12:40:38 Узел, записанный при двух серверах, на месте
+$ zookeeper/zk3/bin/zkCli.sh -server 127.0.0.1:2183 get /stage2-check
+Connecting to 127.0.0.1:2183
+WATCHER::
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+written-with-2-of-3-servers
+$ zookeeper/zk3/bin/zkCli.sh -server 127.0.0.1:2183 delete /stage2-check
+Connecting to 127.0.0.1:2183
+WATCHER::
+WatchedEvent state:SyncConnected type:None path:null zxid: -1

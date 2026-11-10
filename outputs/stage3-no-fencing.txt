@@ -1,0 +1,28 @@
+===== logs/stage3-no-fencing/coordinator-{A,B}.log: смена лидера, чекпоинт, сверка с ДЗ 3, публикация
+12:47:54.533 [A pid 84812] INFO СТАЛ ЛИДЕРОМ: эпоха 1 (ждал очереди 0.0 с)
+12:47:54.613 [A pid 84812] INFO чекпоинта нет: считаю все 26 сплитов s3://hh-lake/raw/it_vacancies_2024.csv (847619384 байт)
+12:48:19.921 [B pid 84813] INFO СТАЛ ЛИДЕРОМ: эпоха 2 (ждал очереди 24.9 с)
+12:48:20.021 [B pid 84813] INFO продолжаю с чекпоинта: готово 8 из 26 сплитов, осталось 18
+12:48:52.423 [B pid 84813] INFO сверка с ДЗ 3 (hw3_reference/pairs.csv): СОВПАДАЕТ байт в байт — пар 7124, сумма 39256, отпечаток 1f165b4be04d5005
+12:48:52.450 [B pid 84813] INFO ЗАПИСАЛ РЕЗУЛЬТАТ: /hw4/stage3-no-fencing/result версия 1 (эпоха 2, без проверки эпохи)
+12:48:53.706 [A pid 84812] WARNING связь с ZooKeeper прервана (SUSPENDED)
+12:48:53.714 [A pid 84812] WARNING сессия ZooKeeper истекла (LOST): её эфемерные узлы удалены сервером
+12:48:55.767 [A pid 84812] INFO сверка с ДЗ 3 (hw3_reference/pairs.csv): СОВПАДАЕТ байт в байт — пар 7124, сумма 39256, отпечаток 1f165b4be04d5005
+12:48:55.806 [A pid 84812] INFO ЗАПИСАЛ РЕЗУЛЬТАТ: /hw4/stage3-no-fencing/result версия 2 (эпоха 1, без проверки эпохи)
+
+===== указатель на результат и счётчик эпох в ZooKeeper
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 get -s /hw4/stage3-no-fencing/result
+{"result": "s3://hh-lake/results/hw4/stage3-no-fencing/pairs-epoch1-A.csv", "epoch": 1, "coordinator": "A", "pairs": 7124, "sum": 39256, "fingerprint": "1f165b4be04d5005", "written_at": "2026-11-10T12:48:55.792"}
+cZxid = 0x3000000bf
+ctime = Tue Nov 10 12:47:54 MSK 2026
+mZxid = 0x3000000e7
+mtime = Tue Nov 10 12:48:55 MSK 2026
+pZxid = 0x3000000bf
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 212
+numChildren = 0
+$ zookeeper/zk1/bin/zkCli.sh -server 127.0.0.1:2181 get /hw4/stage3-no-fencing/epoch
+{"epoch": 2, "leader": "B", "since": "2026-11-10T12:48:19.907"}

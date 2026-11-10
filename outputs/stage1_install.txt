@@ -1,0 +1,44 @@
+$ echo $JAVA_HOME
+/Users/vladimirbaranov/Library/Java/JavaVirtualMachines/jdk-17.0.21+9/Contents/Home
+
+$ java -version
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode, sharing)
+
+$ cd .downloads && shasum -a 512 -c apache-zookeeper-3.9.6-bin.tar.gz.sha512 && echo "78b08c7f5a0598242d5719c022e19479cb4a3aa45c37c19726a757a469ed1c15  OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.21_9.tar.gz" | shasum -a 256 -c - && ls -l *.tar.gz | awk "{print \$5, \$9}"
+apache-zookeeper-3.9.6-bin.tar.gz: OK
+OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.21_9.tar.gz: OK
+22901907 apache-zookeeper-3.9.6-bin.tar.gz
+186192554 OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.21_9.tar.gz
+
+$ ls -d zookeeper/zk*/ && ls zookeeper/zk1
+zookeeper/zk1/
+zookeeper/zk2/
+zookeeper/zk3/
+bin
+conf
+data
+docs
+lib
+LICENSE.txt
+logs
+NOTICE.txt
+README_packaging.md
+README.md
+
+$ cd zookeeper/zk1 && bin/zkServer.sh version
+ZooKeeper JMX enabled by default
+Using config: /Users/vladimirbaranov/Documents/vk4/zookeeper/zk1/bin/../conf/zoo.cfg
+Apache ZooKeeper, version 3.9.6 2026-09-03 19:29 UTC
+
+$ for n in 1 2 3; do echo "zk$n: myid=$(cat zookeeper/zk$n/data/myid) $(grep -E "^(clientPort|admin.serverPort|dataDir)=" zookeeper/zk$n/conf/zoo.cfg | tr "\n" " ")"; done
+zk1: myid=1 dataDir=data clientPort=2181 admin.serverPort=8081 
+zk2: myid=2 dataDir=data clientPort=2182 admin.serverPort=8082 
+zk3: myid=3 dataDir=data clientPort=2183 admin.serverPort=8083 
+
+$ grep -h "^server\." zookeeper/zk*/conf/zoo.cfg | sort | uniq -c
+   3 server.1=127.0.0.1:2888:3888
+   3 server.2=127.0.0.1:2889:3889
+   3 server.3=127.0.0.1:2890:3890
+

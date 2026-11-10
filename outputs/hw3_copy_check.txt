@@ -1,0 +1,9 @@
+Файлы, взятые из ДЗ 3 без изменений (duck.py и profiling.py координатору не нужны и не копировались):
+  hw/__init__.py             совпадает  e3b0c44298fc1c14
+  hw/jobs.py                 совпадает  ec782a3c28a5436c
+  hw/mapreduce.py            совпадает  11b55272e0dcbd0b
+  hw/normalize.py            совпадает  81de2955ca1363ec
+  hw/s3.py                   совпадает  b7f8faccf9429003
+  hw/settings.py             совпадает  b8da5a21d1ffeb78
+  config/skill_aliases.csv   совпадает  4c30e010459f1682
+  hw3_reference/pairs.csv    совпадает  8539014e4101df63  (= results/mapreduce/pairs.csv ДЗ 3)
